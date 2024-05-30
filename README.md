@@ -349,3 +349,109 @@ body {
 }
  ```
 Imposta il font del corpo del documento a Arial (o sans-serif se Arial non è disponibile) e un margine di 20px. Quello che può venire scritto all'interno delle parentesi è infinito (vi sono infatti diversi innumerevoli _references_ scritte tutte a questo sito https://www.w3schools.com/cssref/index.php). 
+Anche le parti dell'HTML che vengono modificate possono essere innumerevoli, oltre ai nomi dei diversi tag, si possono anche creare classi di tag e id (tutti scritti a questa pagina https://www.w3schools.com/cssref/css_selectors.php) e vengono creati per raggruppare gruppi di diversi tag che devono avere lo stesso identico stile (come ad esempio anche alcuni pulsanti, o alcuni tipi di testi). 
+
+Dopo la creazione del'HTML con i diversi form si è passato alla modifica del flask per creare cinque diverse funzioni in grado di passare le informazioni inserite nell'utente per creare oggetti di FilmC e, di conseguenza, delle Videoteche. 
+Per fare ciò la pagina di Flask è stata modificata come segue:
+ ```
+from flask import Flask, render_template, request
+#main class è Flask per creare le web application, render_template funzione che renderizza il templat html
+
+from Videoteca import Videoteca
+from FilmC import FilmC
+
+risultato = Videoteca()
+
+app = Flask(__name__) #passa il nome del modulo corrente. Crea una nuova istanza dell'applicazione che useremo
+#per definire i routes e per configurarla
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/form1', methods =['GET', 'POST'])
+
+def formLudoteca():
+    titolo = None
+    regista = None
+    if request.method == 'POST':
+        titolo = request.form.get('titolo')
+        regista = request.form.get('regista')
+        anno_uscita = request.form.get('anno')
+        disp = request.form.get('bool')
+
+        film = FilmC(titolo,regista, int(anno_uscita), bool(disp))
+        risultato.aggiungi_film(film)
+        risultato.getInfoVideoteca()
+
+    return render_template('home.html', titolo=titolo, regista=regista)
+
+@app.route('/form2', methods =['GET', 'POST'])
+def formLudoteca2():
+    titolo = None
+    if request.method == 'POST':
+        titolo =request.form.get('ricerca')
+    risultato.cerca_film(titolo)
+    return render_template('home.html', titolo=titolo)
+
+@app.route('/form3', methods =['GET', 'POST'])
+def formLudoteca3():
+    titolo = None
+    if request.method == 'POST':
+        titolo =request.form.get('rimuovi')
+    risultato.rimuovi_film(titolo)
+    return render_template('home.html', titolo=titolo)
+
+@app.route('/form4', methods =['GET', 'POST'])
+def formLudoteca4():
+    titolo = None
+    if request.method == 'POST':
+        titolo =request.form.get('prestito')
+    risultato.Prestito_film(titolo)
+    return render_template('home.html', titolo=titolo)
+
+@app.route('/form5', methods =['GET', 'POST'])
+def formLudoteca5():
+    titolo = None
+    if request.method == 'POST':
+        titolo =request.form.get('restituisci')
+        risultato.Restituisci_film(titolo)
+    return render_template('home.html', titolo=titolo)
+
+if __name__ == '__main__':
+#Questa riga è una clausola di guardia che garantisce che il codice seguente venga eseguito solo quando lo script viene eseguito direttamente (ovvero, non quando viene importato come modulo da un altro script).
+    app.run(debug=True)
+ ```
+Analizzando riga per riga:
+ ```
+def formLudoteca():
+ ```
+La funzione formLudoteca viene definita senza parametri. Gestisce una richiesta HTTP e si aspetta di essere invocata in risposta a una richiesta a un determinato endpoint. Si inizializzano le variabili:
+ ```
+titolo = None
+regista = None
+ ```
+Le variabili titolo e regista vengono inizializzate a None. Queste variabili verranno successivamente utilizzate per memorizzare i dati inviati tramite un modulo (form) HTML.
+ ```
+if request.method == 'POST':
+ ```
+Qui si controlla se il metodo della richiesta HTTP è POST. Questo indica che il modulo è stato inviato dal client. La differenza con GET è nel fatto che quest'ultimo, invece, consiste nell'accodare all'indirizzo della pagina web (URL) i diversi parametri contenenti i dati che si vogliono trasmettere; all'URL originale viene quindi aggiunto alla fine un punto interrogativo seguito dai parametri e dai dati da trasferire.
+ ```
+titolo = request.form.get('titolo')
+regista = request.form.get('regista')
+anno_uscita = request.form.get('anno')
+disp = request.form.get('bool')
+ ```
+Vengono estratti i dati inviati tramite il modulo HTML utilizzando request.form.get(). I campi attesi nel modulo sono titolo, regista, anno e bool (presumibilmente uno stato di disponibilità).
+ ```
+film = FilmC(titolo, regista, int(anno_uscita), bool(disp))
+ ```
+Viene creata un'istanza della classe FilmC con i dati appena raccolti. I dati estratti dal modulo vengono utilizzati per inizializzare questa istanza. anno_uscita viene convertito in un intero e disp viene convertito in un booleano per essere sicuri che il passaggio avvenga nel modo corretto per far successivamente funzionare i diversi metodi.
+ ```
+risultato.aggiungi_film(film)
+risultato.getInfoVideoteca()
+ ```
+L'oggetto film viene aggiunto a un oggetto risultato tramite il metodo aggiungi_film e poi viene stampata a terminale la videoteca.
+Questo viene ripetuto cambiando il metodo per gli altri form.
+
+
