@@ -9,6 +9,9 @@ class Videoteca:
         if (film.getDisponibilità() == False):
             self.__film.append(film)
             film.setDisponibilità(True)
+            print (self.__film)
+        else:
+            ("Il film è già presente in catalogo")
     
     def rimuovi_film(self,titolo: FilmC):
         for i in self.__film:
@@ -40,31 +43,23 @@ class Videoteca:
         return print("Il film non risulta in prestito")
    
     def getInfoVideoteca(self):
-        disp = [film.getInfoFilm() for film in self.__film if film.getDisponibilità()]
-        if disp:
+        #disp = [film.getInfoFilm() for film in self.__film if film.getDisponibilità()]
+        result = []
+        for film in self.__film:
+            dispo = film.getDisponibilità()
+            if dispo:
+                info_film = film.getInfoFilm()
+                result.append(info_film)
+        if dispo:
             print("Film disponibili:")
-            for inform in disp:
+            for inform in result:
                 print(inform)
         else:
             print("Nessun film disponibile al momento.")
 
 
 
-film1 = FilmC("Ciao", "Marta", 2000, False)
-film2 = FilmC("Ciao2", "Marta2", 2002, False)
-film3 = FilmC("Ciao3", "Marta2", 2002, False)
 
-videoteca = Videoteca()
-videoteca.aggiungi_film(film1)
-videoteca.aggiungi_film(film2)
-videoteca.aggiungi_film(film3)
-
-videoteca.Prestito_film("Ciao3")
-videoteca.Restituisci_film("Ciao3")
-
-videoteca.rimuovi_film("Ciao2")
-videoteca.cerca_film("Ciao3")
-videoteca.getInfoVideoteca()
 
 
     
