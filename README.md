@@ -423,6 +423,7 @@ if __name__ == '__main__':
     app.run(debug=True). In foto l'output finale della pagina web.
 
  ```
+**OUTPUT FINALE**
 ![image](https://github.com/Marta63637/Videoteca/assets/132621166/fd46cc5a-dac2-4743-87ef-f53e05722df0)
 ![image](https://github.com/Marta63637/Videoteca/assets/132621166/b84e77a1-5238-49da-862a-811097baee5c)
 Analizzando riga per riga:
